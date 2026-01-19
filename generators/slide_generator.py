@@ -30,18 +30,57 @@ class SlideGenerator:
         self.default_bg_color = (102, 126, 234)  # #667eea
         self.text_color = (255, 255, 255)
         
-        # 嘗試載入字體（Windows 系統）
-        try:
-            self.title_font = ImageFont.truetype("C:/Windows/Fonts/msyh.ttc", 80)
-            self.subtitle_font = ImageFont.truetype("C:/Windows/Fonts/msyh.ttc", 50)
-            self.text_font = ImageFont.truetype("C:/Windows/Fonts/msyh.ttc", 36)
-            self.small_font = ImageFont.truetype("C:/Windows/Fonts/msyh.ttc", 28)
-        except:
-            print("⚠️ 無法載入系統字體，使用默認字體")
-            self.title_font = ImageFont.load_default()
-            self.subtitle_font = ImageFont.load_default()
-            self.text_font = ImageFont.load_default()
-            self.small_font = ImageFont.load_default()
+        # 載入字體（跨平台支持）
+        self.title_font = self._load_font(80)
+        self.subtitle_font = self._load_font(50)
+        self.text_font = self._load_font(36)
+        self.small_font = self._load_font(28)
+    
+    def _load_font(self, size: int):
+        """載入字體（跨平台支持）"""
+        import platform
+        import sys
+        
+        font_paths = []
+        system = platform.system()
+        
+        if system == "Windows":
+            font_paths = [
+                "C:/Windows/Fonts/msyh.ttc",
+                "C:/Windows/Fonts/simhei.ttf",
+                "C:/Windows/Fonts/simsun.ttc"
+            ]
+        elif system == "Darwin":  # macOS
+            font_paths = [
+                "/System/Library/Fonts/PingFang.ttc",
+                "/Library/Fonts/Arial Unicode.ttf"
+            ]
+        else:  # Linux
+            font_paths = [
+                "/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc",
+                "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc",
+                "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+            ]
+        
+        # 嘗試從 assets 目錄載入（優先）
+        assets_font = os.path.join(os.path.dirname(__file__), '..', 'assets', 'fonts', 'NotoSansTC-Bold.otf')
+        if os.path.exists(assets_font):
+            try:
+                return ImageFont.truetype(assets_font, size)
+            except:
+                pass
+        
+        # 嘗試系統字體
+        for font_path in font_paths:
+            if os.path.exists(font_path):
+                try:
+                    return ImageFont.truetype(font_path, size)
+                except:
+                    continue
+        
+        # 如果都失敗，使用預設字體
+        print(f"⚠️ 無法載入中文字體，使用預設字體 (size={size})")
+        return ImageFont.load_default()
     
     def generate_slides(self, course_data: Dict[str, Any], course_id: str) -> List[str]:
         """

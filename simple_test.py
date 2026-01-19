@@ -1,10 +1,18 @@
 """
 简单测试 - 测试基本的 Gemini API 调用
 """
+import os
+from dotenv import load_dotenv
 from google import genai
 
-# 使用提供的 API Key
-api_key = "AIzaSyAePl01WRZyDMMlxG3h0zeJrimD9wDlW6I"
+# 從環境變量讀取 API Key
+load_dotenv()
+api_key = os.getenv("GEMINI_API_KEY", "")
+
+if not api_key:
+    print("❌ 錯誤：請在 .env 文件中設置 GEMINI_API_KEY")
+    exit(1)
+
 client = genai.Client(api_key=api_key)
 
 try:

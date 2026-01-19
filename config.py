@@ -25,7 +25,13 @@ OLLAMA_NUM_CTX = 8192      # 支持長文本處理
 OLLAMA_NUM_PREDICT = 4096  # 最大生成長度
 
 # ========== Gemini API 配置（備用）==========
-GEMINI_API_KEY = "AIzaSyAePl01WRZyDMMlxG3h0zeJrimD9wDlW6I"
+# 使用環境變量管理敏感資訊
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # 載入 .env 文件
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")  # 從環境變量讀取
 GEMINI_MODEL = "gemini-1.5-flash"
 
 # ========== 混合模式配置 ==========
@@ -45,10 +51,11 @@ for directory in [OUTPUT_DIR, SLIDES_DIR, AUDIO_DIR, VIDEO_DIR, CACHE_DIR]:
     os.makedirs(directory, exist_ok=True)
 
 # Flask 配置
-# Flask 配置
-DEBUG = True
+DEBUG = os.getenv("FLASK_DEBUG", "False").lower() == "true"
+FLASK_ENV = os.getenv("FLASK_ENV", "production")
+SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key-change-in-production")
 HOST = "0.0.0.0"
-PORT = 5001  # 改用5001端口，避免与其他服务冲突
+PORT = int(os.getenv("PORT", "5001"))  # 支持環境變量配置端口
 
 # Agent 配置
 MAX_RETRIES = 3        # API 調用重試次數

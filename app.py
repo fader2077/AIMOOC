@@ -17,6 +17,18 @@ CORS(app)
 orchestrator = None
 
 
+@app.route('/health')
+def health_check():
+    """Health check endpoint for Docker and load balancers"""
+    return jsonify({
+        "status": "healthy",
+        "service": "AI MOOC Generator",
+        "version": "1.0.0",
+        "ollama_configured": bool(config.OLLAMA_BASE_URL),
+        "gemini_configured": bool(config.GEMINI_API_KEY)
+    }), 200
+
+
 @app.route('/')
 def index():
     """首頁"""
@@ -117,16 +129,6 @@ def get_decision_logs():
         }), 500
 
 
-@app.route('/api/health', methods=['GET'])
-def health_check():
-    """健康檢查"""
-    return jsonify({
-        "status": "healthy",
-        "timestamp": datetime.now().isoformat(),
-        "gemini_api_configured": bool(config.GEMINI_API_KEY)
-    })
-
-
 @app.route('/outputs/<path:filename>')
 def serve_output(filename):
     """提供輸出文件下載"""
@@ -166,7 +168,12 @@ if __name__ == '__main__':
     print(f"API 地址: http://{config.HOST}:{config.PORT}")
     print(f"Gemini API: {'已配置' if config.GEMINI_API_KEY else '未配置'}")
     print(f"輸出目錄: {config.OUTPUT_DIR}")
+    print(f"環境模式: {config.FLASK_ENV}")
     print("=" * 60)
+    
+    if config.DEBUG:
+        print("\n⚠️  WARNING: Running in DEBUG mode. Not for production!")
+        print("   For production, use: gunicorn -w 4 -b 0.0.0.0:5001 wsgi:app\n")
     
     app.run(
         host=config.HOST,

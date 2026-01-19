@@ -1,7 +1,33 @@
+# Core Dependencies - with version pinning for stability
+Flask==3.0.0
+flask-cors==4.0.0
+python-dotenv==1.0.0
+
+# AI/LLM Libraries
+ollama==0.4.7
 google-genai>=0.2.0
-flask>=3.0.0
-flask-cors>=4.0.0
-pillow>=10.0.0
-requests>=2.31.0
+
+# Image Processing
+Pillow==10.4.0
+
+# Audio/Video Processing
+edge-tts==6.1.12
+moviepy==2.1.1
+imageio-ffmpeg==0.6.0
 pydub>=0.25.1
-python-dotenv>=1.0.0
+
+# HTTP Requests
+requests>=2.31.0
+
+# Production WSGI Servers
+gunicorn==21.2.0; platform_system != "Windows"
+waitress==3.0.0; platform_system == "Windows"
+
+# Optional: Async Task Queue (for production)
+# celery==5.3.4
+# redis==5.0.1
+
+# Optional: Enhanced JSON parsing
+# pydantic==2.5.3
+# instructor==0.4.5
+
