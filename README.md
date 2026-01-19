@@ -59,3 +59,15 @@ aimoddle/
 ├── config.py       # 配置文件
 └── requirements.txt # Python 依賴
 ```
+
+## 更多文檔
+
+- [快速開始指南](QUICKSTART.md)
+- [使用說明](USAGE.md)
+- [專案總結](PROJECT_SUMMARY.md)
+- [完成報告](COMPLETION_REPORT.md)
+- [Ollama 配置指南](OLLAMA_GUIDE.md)
+
+## License
+
+MIT License
